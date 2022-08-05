@@ -1,0 +1,11 @@
+bearer_token = "AAAAAAAAAAAAAAAAAAAAAJR1fgEAAAAAwFAl7%2BAB0gW7my7sagqUR1xnc4w%3D80froEvtU6y7wrrb3EVU8MYI7jbMgnZySdO1vuOI8Cl81i1bNP"
+consumer_key = "rs1lf9SIz1nQodZFW9FXm4ioh"
+consumer_secret = "D3Yf5N8yoIsKqLaZ3s5n0Ygyn8SPXGOXCay6y2XYqgWJNhIGlO"
+# access_token = "1555361813876858880-aGKzyeI2c7TsvaYydWcUZzLgJoOHDK"
+# access_token_secret = "jKsbcRiqcH74Bn5SkTkIsmkvcqSKp81PLvba5taKq8ZhU"
+access_token = "1555361813876858880-J7BFglDSLWYwEeNTNsQveRQi2w4QV9"
+access_token_secret = "tAOCBRtaDcw7s024YG3OoFP5WgQvpNAcOMiketTod5LFd"
+
+
+
+# TZWUmYrLzuWO6kYsWFky27avaHZ6IyKEFPreRF8C7AE7kXgfCf
