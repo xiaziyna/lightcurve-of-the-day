@@ -18,19 +18,17 @@ first_q = x.koi_quarters.index('1', 2) + 1
 lcf = lk.search_lightcurve(f"KIC {x.kepid}", author='Kepler', quarter=first_q).download()
 lc_flux = lcf.pdcsap_flux
 lc_flux[lcf.quality > 0] = np.nan
+
 lc_times = lcf.time.to_value(format='jd') - 2454833
 ylabel = 'pdcsap_flux [e'+r'$^-$'+'s'+r'$^{-1}$'+']'
 xlabel = 'Time - 2454833 [BKID days]'
 title = f"Q:{first_q}, KID:{x.kepid}, Period (days):{x.koi_period}, Radius[$\odot$]:{x.koi_prad}"
 
-
-
 fig = plt.figure()
 xdata, ydata = [], []
 ln, = plt.plot([], [], 'o-b', clip_on=False, markersize=1, linewidth=2)
 plt.xlim(lc_times[0], lc_times[-1])
-plt.ylim(lc_flux.min(), lc_flux.max())
-
+plt.ylim(np.nanmin(lc_flux.to_value()), np.nanmax(lc_flux.to_value()))
 
 def update(frame):
     ln.set_data(lc_times[:frame], lc_flux[:frame])
