@@ -20,15 +20,18 @@ lc_flux = lcf.pdcsap_flux
 lc_flux[lcf.quality > 0] = np.nan
 
 lc_times = lcf.time.to_value(format='jd') - 2454833
-ylabel = 'pdcsap_flux [e'+r'$^-$'+'s'+r'$^{-1}$'+']'
-xlabel = 'Time - 2454833 [BKID days]'
-title = f"Q:{first_q}, KID:{x.kepid}, Period (days):{x.koi_period}, Radius[$\odot$]:{x.koi_prad}"
+ylab = 'pdcsap_flux [e'+r'$^-$'+'s'+r'$^{-1}$'+']'
+xlab = 'Time - 2454833 [BKID days]'
+tit = f"Q:{first_q}, KID:{x.kepid}, Period (days):{x.koi_period}, Radius[$\odot$]:{x.koi_prad}"
 
 fig = plt.figure()
 xdata, ydata = [], []
 ln, = plt.plot([], [], 'o-b', clip_on=False, markersize=1, linewidth=2)
 plt.xlim(lc_times[0], lc_times[-1])
 plt.ylim(np.nanmin(lc_flux.to_value()), np.nanmax(lc_flux.to_value()))
+plt.xlabel(xlab)
+plt.ylabel(ylab)
+plt.title(tit)
 
 def update(frame):
     ln.set_data(lc_times[:frame], lc_flux[:frame])
