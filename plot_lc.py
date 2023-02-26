@@ -70,10 +70,8 @@ def get_exo():
     radius_p_s_ratio = x.koi_ror
     radius_p = x.koi_prad
     k_id = x.kepid
-    print (k_id)
 
     lc_files = lk.search_lightcurve(f"KIC {k_id}", author='Kepler', cadence = "long").download_all()
-    print ('elapse')
     flux = []
     for lcf in lc_files:
         lc_flux = lcf.pdcsap_flux.to_value()
