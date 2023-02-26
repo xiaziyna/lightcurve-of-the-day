@@ -116,7 +116,7 @@ def get_exo():
 #    if dur<5:
 #        plt.xticks(np.linspace((prd/2) - half_window, (prd/2) + half_window + (1/24), 2*int(width*np.ceil(dur))+1 ), np.arange(-int(width*np.ceil(dur)), int(width*np.ceil(dur))+1, 1, dtype='int'))
 #    else:
-#        plt.xticks(np.linspace((prd/2) - half_window, (prd/2) + half_window + (2/24), 2*int(width*np.ceil(dur))+2 ), np.arange(-int(width*np.ceil(dur)), int(width*np.ceil(dur))+2, 2, dtype='int'))
+#        plt.xticks(np.linspace((prd/2) - half_window, (prd/2) + half_window + (2/24), int(width*np.ceil(dur))+1 ), np.arange(-int(width*np.ceil(dur)), int(width*np.ceil(dur))+2, 2, dtype='int'))
 #    plt.legend(loc = 'lower right')
 #    plt.show()
     return (trunc_flux, trunc_times, start_transit_ind, end_transit_ind, window, k_id, prd, time0bk, dur, radius_p_s_ratio, radius_p, lc.kepmag, lc.ra_obj, lc.dec_obj, depth)
