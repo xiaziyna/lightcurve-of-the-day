@@ -112,7 +112,7 @@ def get_exo():
 #    plt.figure()
 #    plt.scatter(trunc_sort, trunc_flux, s=.2, label = 'phase folded data (KepID: %s, p: %s[D] d: %s[h], epoch: %s[BJD-%s])' % (int(k_id), "{:.2f}".format(float(prd)), int(dur),"{:.2f}".format(time0bk), int(BKJD_start_time)))
 #    plt.ylabel('Flux - median')
-#    plt.xlabel('Time since transit midpoint[h]')
+#    plt.xlabel('Time since transit midpoint [h]')
 #    if dur<5:
 #        plt.xticks(np.linspace((prd/2) - half_window, (prd/2) + half_window + (1/24), 2*int(width*np.ceil(dur))+1 ), np.arange(-int(width*np.ceil(dur)), int(width*np.ceil(dur))+1, 1, dtype='int'))
 #    else:
@@ -123,9 +123,6 @@ def get_exo():
 #=================================
 
 trunc_flux, trunc_sort, start_transit_ind, end_transit_ind, window, k_id, prd, time0bk, dur, radius_p_s_ratio, radius_p, kepmag, ra_obj, dec_obj, depth = get_exo()
-
-# time, t
-#c = s_grav_2, cmap = 'winter'
 
 #Planet param format
 print ('Kepler ID: %s, Period[days]: %s, Epoch[BKJD]: %s, Duration[hr]: %s, Radius planet/star: %s, Radius planet[Earth rad]: %s, Kepler mag: %s, RA: %s, Dec: %s' % (int(k_id), "{:.2f}".format(float(prd)), "{:.2f}".format(float(time0bk)), int(dur), "{:.3f}".format(float(radius_p_s_ratio)), "{:.2f}".format(float(radius_p)),  "{:.2f}".format(float(kepmag)), "{:.2f}".format(float(ra_obj)), "{:.2f}".format(float(dec_obj))))
