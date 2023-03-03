@@ -89,12 +89,11 @@ def get_lightcurve(test=False):
 
     # phase fold data points
     lc['folded_time'] = (
-        lc.index - lc_info.koi_time0bk - lc_info.koi_period / 2
+        lc.time.to_value(format='bkjd') - lc_info.koi_time0bk - lc_info.koi_period / 2
     ) % lc_info.koi_period
     lc = lc.sort_values('folded_time')
 
     # hours from middle of transit
-    lc['transit_hours'] = (lc.folded_time - lc_info.koi_period / 2) * 24
-
+    lc['transit_hours'] = (lc.folded_time - lc_info.koi_period / 2) / 24
 
     return lc, lc_info
