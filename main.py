@@ -1,11 +1,10 @@
 import tweepy
 import requests
-from keys import bearer_token, consumer_key, consumer_secret, access_token, access_token_secret
+from keys import bearer_token, api_key, api_key_secret, access_token, access_token_secret
 
 def main():
 
-    # authorization of consumer key and consumer secret
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
+    auth = tweepy.OAuthHandler(api_key, api_key_secret)
     # set access to user's access key and access secret
     auth.set_access_token(access_token, access_token_secret)
     # calling the api
