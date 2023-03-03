@@ -69,11 +69,11 @@ def generate_animation(lc, lc_info):
     # ----- Lightcurve Plot -----
 
     # grab actual transit part of data
-    half_window = 4 * lc_info.koi_duration / 24 # size of plotted window (days)
+    half_window = 4 * lc_info.koi_duration * 24 # size of plotted window (days)
     w_start = lc_info.koi_period / 2 - half_window
     w_end = lc_info.koi_period / 2 + half_window
-    t_start = lc_info.koi_period / 2 - (lc_info.koi_duration / 24) / 2
-    t_end = lc_info.koi_period / 2 + (lc_info.koi_duration / 24) / 2
+    t_start = lc_info.koi_period / 2 - (lc_info.koi_duration * 24) / 2
+    t_end = lc_info.koi_period / 2 + (lc_info.koi_duration * 24) / 2
     lc = lc[(lc.folded_time > w_start) & (lc.folded_time < w_end)]
 
     # FIXME: add correct xticks
