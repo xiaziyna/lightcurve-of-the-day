@@ -29,8 +29,8 @@ def get_lightcurve(test=False):
             lightkurve
 
     Returns:
-        lc (pandas DataFrame): lightcurve information in a pandas dataframe.
-            The relevant columns are 'flux_clean' and 'transit_hours
+        lc (pandas DataFrame): phase-folded and cleaned lightcurve in a pandas dataframe.
+            The relevant column is 'flux_clean'
         lc_info (pandas Series): contains information about the specific
             lightcurve such as Kepler ID ('kepid'), orbital period ('koi_period'),
             transit duration ('koi_duration'), planet/star ratio ('koi_ror'),
@@ -49,7 +49,6 @@ def get_lightcurve(test=False):
         (data.koi_prad > 3) &
         (data.num_quarters>12)
     ]
-    x = pd.read_pickle('/tmp/selected_curve.pkl')
 
     # choose a lightcurve
     if test:
@@ -72,17 +71,14 @@ def get_lightcurve(test=False):
     # stitch lightcurve data and filter out low quality data points
     lc = pd.concat(lc_chunks).query('quality == 0')
 
-    # # phase fold data points
+    # phase fold data points
     lc['folded_time'] = (
         lc.index - lc_info.koi_time0bk - lc_info.koi_period / 2
     ) % lc_info.koi_period
     lc = lc.sort_values('folded_time')
 
-    # # grab actual transit part of data
-    window = 8 * lc_info.koi_duration / 24
-    start = lc_info.koi_period / 2 - window / 2
-    end = lc_info.koi_period / 2 + window / 2
-    lc = lc[(lc.folded_time > start) & (lc.folded_time < end)]
+    # hours from middle of transit
     lc['transit_hours'] = (lc.folded_time - lc_info.koi_period / 2) * 24
+
 
     return lc, lc_info
