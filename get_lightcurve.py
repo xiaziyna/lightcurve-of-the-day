@@ -4,6 +4,22 @@ import pandas as pd
 import numpy as np
 import lightkurve as lk
 
+#=================================
+# EXOPLANET DATA FORMAT
+# koi_period, koi_time0 (BKJD), koo_dur, koi_depth, koi_ror, koi_prad,
+# COLUMN kepid:          KepID
+# COLUMN koi_period:     Orbital Period [days]
+# COLUMN koi_time0bk:    Transit Epoch [BKJD]
+# COLUMN koi_duration:   Transit Duration [hrs]
+# COLUMN koi_depth:      Transit Depth [ppm]
+# COLUMN koi_ror:        Planet-Star Radius Ratio
+# COLUMN koi_prad:       Planetary Radius [Earth radii]
+# COLUMN koi_quarters:   Quarters
+# COLUMN koi_disposition: Exoplanet Archive Disposition
+#=================================
+#https://exoplanetarchive.ipac.caltech.edu/cgi-bin/TblView/nph-tblView?app=ExoTbls&config=cumulative
+# Description of the columns in the list of all known KOI - cumulative.tab
+
 def threshold_positive(x):
     """Find outliers and replace them with samples from a Gaussian"""
     data = np.copy(x)
