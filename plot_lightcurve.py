@@ -69,68 +69,76 @@ def generate_animation(lc, lc_info):
     # ----- Lightcurve Plot -----
 
     # grab actual transit part of data
-    half_window = 4 * lc_info.koi_duration * 24 # size of plotted window (days)
+    half_window = 4 * lc_info.koi_duration / 24 # size of plotted window (days)
+    # window boundaries (days)
     w_start = lc_info.koi_period / 2 - half_window
     w_end = lc_info.koi_period / 2 + half_window
-    t_start = lc_info.koi_period / 2 - (lc_info.koi_duration * 24) / 2
-    t_end = lc_info.koi_period / 2 + (lc_info.koi_duration * 24) / 2
-    lc = lc[(lc.folded_time > w_start) & (lc.folded_time < w_end)]
+    # transit boundaries (days)
+    t_start = lc_info.koi_period / 2 - (lc_info.koi_duration / 24) / 2
+    t_end = lc_info.koi_period / 2 + (lc_info.koi_duration / 24) / 2
 
-    # FIXME: add correct xticks
-    curve.plot(lc.transit_hours, lc.flux_clean, 'wo', markersize=1)
+    transit = (w_start <= lc.folded_time) & (lc.folded_time < w_end)
+    curve.plot(lc.transit_hours[transit], lc.flux_clean[transit], 'wo', markersize=1)
     curve.set_yticks([])
     curve.set_xlabel('Time to transit (h)')
     curve.margins(x=0)
     curve_t = curve.axvline(x=0, ls='--')
 
-    # total animation frames
-    n_tot = 400
-    # center of transit
-    n_center = n_tot // 2
-    # window start/end times
-    n_w0 = n_center - math.floor((half_window / lc_info.koi_period) * n_tot)
-    n_w1 = n_center + math.ceil((half_window / lc_info.koi_period) * n_tot)
-    # transit start/end times
-    start_ind = lc.folded_time.searchsorted(t_start)
-    end_ind = lc.folded_time.searchsorted(t_end)
-    n_t0 = n_w0 + math.floor(start_ind / len(lc) * (n_w1 - n_w0))
-    n_t1 = n_w0 + math.floor(end_ind / len(lc) * (n_w1 - n_w0))
+    # import ipdb
+    # ipdb.set_trace()
 
-    def animate(n):
+    def animate(t):
+        # which objects need updating
         artists = []
 
         # --- Transit graphic ---
         # only draw planet during transit frames
-        if n in range(n_t0, n_t1):
+        if t_start <= t < t_end:
             planet.set_alpha(1)
-            p_frac = (n + 1 - n_t0) / (n_t1 - n_t0)
             planet.set_center((
-                p_frac*star_radius*2*ppu,
-                h*ppu//2
+                # planet x position
+                (t - t_start) / (lc_info.koi_duration / 24) * star_radius * 2 * ppu,
+                # planet y position
+                h * ppu//2
             ))
-        else:
+            artists.append(planet)
+        elif planet.get_alpha() == 1:
             planet.set_alpha(0)
+            artists.append(planet)
 
         # --- Orbit inset diagram ---
         # make planet orbit star, starting at pi/2
-        c = p_dist * np.cos(2 * np.pi * n / n_tot + np.pi / 2)
-        s = p_dist * np.sin(2 * np.pi * n / n_tot + np.pi / 2)
+        c = p_dist * np.cos(2 * np.pi * t / lc_info.koi_period + np.pi / 2)
+        s = p_dist * np.sin(2 * np.pi * t / lc_info.koi_period + np.pi / 2)
         planet_inset.set_center((0.5 + c, 0.5 + s))
+        artists.append(planet_inset)
 
         # --- Lightcurve cursor ---
         # only show cursor during window frames
-        if n in range(n_w0, n_w1):
+        if w_start <= t < w_end:
             curve_t.set_alpha(1)
             # fraction of window complete
-            w_frac = (n - n_w0) / (n_w1 - n_w0)
-            t = w_frac * curve.get_xlim()[1] + (1 - w_frac) * curve.get_xlim()[0]
+            w_frac = (t - w_start) / (2 * half_window)
+            xlim = curve.get_xlim()
+            t = w_frac * (xlim[1] - xlim[0]) + xlim[0]
             curve_t.set_xdata([t, t])
-        else:
+            artists.append(curve_t)
+        elif curve_t.get_alpha() == 1:
             curve_t.set_alpha(0)
-        return planet_inset, planet, curve_t
+            artists.append(curve_t)
+
+        return artists
+
+
+    # total animation frames
+    times = np.concatenate((
+        np.linspace(0, w_start, 100),
+        np.linspace(w_start, w_end, 200),
+        np.linspace(w_end, lc_info.koi_period, 100)
+    ))
 
     # plt.tight_layout()
-    anim = animation.FuncAnimation(fig, animate, frames=n_tot, interval=7.5, blit=True)
+    anim = animation.FuncAnimation(fig, animate, frames=times, interval=15, blit=True)
     return anim
 
 lc, lc_info = get_lightcurve(test=True)
@@ -138,6 +146,6 @@ lc, lc_info = get_lightcurve(test=True)
 anim = generate_animation(lc, lc_info)
 # mywriter = animation.FFMpegWriter(fps=60)
 # anim.save('/tmp/out.mp4', writer=mywriter)
-# anim.save('/tmp/out.gif',writer='imagemagick',fps=90);
+# anim.save('/tmp/out.gif', writer='imagemagick', fps=30);
 plt.show()
 plt.close()

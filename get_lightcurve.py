@@ -94,6 +94,6 @@ def get_lightcurve(test=False):
     lc = lc.sort_values('folded_time')
 
     # hours from middle of transit
-    lc['transit_hours'] = (lc.folded_time - lc_info.koi_period / 2) / 24
+    lc['transit_hours'] = (lc.folded_time - lc_info.koi_period / 2) * 24
 
     return lc, lc_info
