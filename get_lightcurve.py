@@ -81,6 +81,10 @@ def get_lightcurve(test=False):
     # lc_files to pandas tables
     lc_info['ra'] = lc_files[0].ra_obj
     lc_info['dec'] = lc_files[0].dec_obj
+    lc_info['teff'] = lc_files[0].teff
+
+    # import ipdb
+    # ipdb.set_trace()
 
     lc_chunks = []
     for lcf in lc_files:
