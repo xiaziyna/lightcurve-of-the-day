@@ -68,7 +68,7 @@ def get_lightcurve(test=False):
 
     # choose a lightcurve
     if test:
-        lc_info = data.iloc[0]
+        lc_info = pd.Series(data.iloc[0])
     else:
         lc_info = data.sample().squeeze()
 
@@ -76,6 +76,11 @@ def get_lightcurve(test=False):
     lc_files = lk.search_lightcurve(
         f"KIC {lc_info.kepid}", author='Kepler', cadence = "long"
     ).download_all(download_dir='.' if test else None)
+
+    # insert extra info from lightkurve into lc_info before converting
+    # lc_files to pandas tables
+    lc_info['ra'] = lc_files[0].ra_obj
+    lc_info['dec'] = lc_files[0].dec_obj
 
     lc_chunks = []
     for lcf in lc_files:
@@ -89,7 +94,7 @@ def get_lightcurve(test=False):
 
     # phase fold data points
     lc['folded_time'] = (
-        lc.time.to_value(format='bkjd') - lc_info.koi_time0bk - lc_info.koi_period / 2
+        lc.index - lc_info.koi_time0bk - lc_info.koi_period / 2
     ) % lc_info.koi_period
     lc = lc.sort_values('folded_time')
 

@@ -2,8 +2,24 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib import animation
+import textwrap
 
 from get_lightcurve import get_lightcurve
+
+def generate_text(lc_info):
+    """Generate text about a lightcurve for social media
+
+    Args:
+        lc_info (pandas Series): lightcurve information from get_lightcurve
+
+    """
+    return textwrap.dedent(f"""\
+    Kepler ID: {lc_info.kepid}
+    Orbital Period: {lc_info.koi_period} days
+    Transit Duration: {lc_info.koi_duration} hours
+    Planet Size: {lc_info.koi_prad} Earth radii
+    Location: {lc_info.ra} RA {lc_info.dec} DEC
+    """)
 
 def generate_animation(lc, lc_info):
     """Generate animation
@@ -28,6 +44,8 @@ def generate_animation(lc, lc_info):
     h = 2
     x_axis = np.linspace(-w//2, w//2, w*ppu)
     y_axis = np.linspace(-h//2, h//2, h*ppu)
+    transit.set_xticks(np.arange(w*ppu))
+    transit.set_yticks(np.arange(h*ppu))
     transit.set_xticklabels(x_axis)
     transit.set_yticklabels(y_axis)
 
@@ -40,17 +58,22 @@ def generate_animation(lc, lc_info):
     mask = dist > star_radius
 
     # adjust star color gradient
-    r_mapped = dist**(1.3)
+    # r_mapped = (dist / star_radius)**(1.3)
+    r_mapped = dist**1.3
+    # r_mapped[mask] = 0
     inner = (255, 155, 50)
     outer = (182, 11, 0)
     transit_img = r_mapped[:, :, None] * outer + (1 - r_mapped[:, :, None]) * inner
-    transit_img = transit_img.astype(int)
     transit_img[mask] = (0, 0, 0)
 
-    transit.imshow(transit_img, aspect='equal')
+    # transit.imshow(transit_img.astype('uint8'), aspect='equal')
+    transit.imshow(transit_img.astype(int), aspect='equal')
     planet = plt.Circle((0, 0), lc_info.koi_ror * star_radius * ppu, color='k')
     transit.add_artist(planet)
     transit.axis(False)
+
+    # import ipdb
+    # ipdb.set_trace()
 
     # ----- Orbit Inset Graphic -----
 
@@ -64,6 +87,8 @@ def generate_animation(lc, lc_info):
     inset.add_artist(orbit)
     inset.add_artist(planet_inset)
     inset.set_aspect('equal')
+    # make transparent background
+    inset.patch.set_alpha(0)
     inset.axis(False)
 
     # ----- Lightcurve Plot -----
@@ -82,7 +107,7 @@ def generate_animation(lc, lc_info):
     curve.set_yticks([])
     curve.set_xlabel('Time to transit (h)')
     curve.margins(x=0)
-    curve_t = curve.axvline(x=0, ls='--')
+    curve_t = curve.axvline(x=0, ls='--', alpha=0)
 
     # import ipdb
     # ipdb.set_trace()
@@ -141,11 +166,3 @@ def generate_animation(lc, lc_info):
     anim = animation.FuncAnimation(fig, animate, frames=times, interval=15, blit=True)
     return anim
 
-lc, lc_info = get_lightcurve(test=True)
-# print('Kepler ID: %s, Period[days]: %s, Epoch[BKJD]: %s, Duration[hr]: %s, Radius planet/star: %s, Radius planet[Earth rad]: %s, Kepler mag: %s, RA: %s, Dec: %s' % (int(k_id), "{:.2f}".format(float(prd)), "{:.2f}".format(float(time0bk)), int(dur), "{:.3f}".format(float(radius_p_s_ratio)), "{:.2f}".format(float(radius_p)),  "{:.2f}".format(float(kepmag)), "{:.2f}".format(float(ra_obj)), "{:.2f}".format(float(dec_obj))))
-anim = generate_animation(lc, lc_info)
-# mywriter = animation.FFMpegWriter(fps=60)
-# anim.save('/tmp/out.mp4', writer=mywriter)
-# anim.save('/tmp/out.gif', writer='imagemagick', fps=30);
-plt.show()
-plt.close()
