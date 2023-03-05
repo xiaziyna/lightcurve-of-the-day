@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 
 def test(args):
 
-    lc, lc_info = get_lightcurve(test=True)
+    lc, lc_info = get_lightcurve(test=not args.r)
     print(generate_text(lc_info))
     anim = generate_animation(lc, lc_info)
     plt.show()
@@ -45,6 +45,7 @@ if __name__ == "__main__":
 
     # subparser for `add` command
     test_parser = subparsers.add_parser('test', help="generate plot and text only")
+    test_parser.add_argument('-r', action='store_true', default=False, help="select random candidate")
     test_parser.set_defaults(func=test)
     twitter_parser = subparsers.add_parser('twitter', help="plot and post to Twitter")
     twitter_parser.set_defaults(func=twitter)
