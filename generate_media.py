@@ -1,7 +1,7 @@
 import math
 import numpy as np
 import matplotlib.pyplot as plt
-from matplotlib import animation
+from matplotlib import animation, colors
 import textwrap
 
 from get_lightcurve import get_lightcurve
@@ -18,6 +18,7 @@ def generate_text(lc_info):
     Orbital Period: {lc_info.koi_period} days
     Transit Duration: {lc_info.koi_duration} hours
     Planet Size: {lc_info.koi_prad} Earth radii
+    Planet/Star Size: {lc_info.koi_ror}
     Location: {lc_info.ra} RA {lc_info.dec} DEC
     """)
 
@@ -59,10 +60,12 @@ def generate_animation(lc, lc_info):
 
     # adjust star color gradient
     r_mapped = (dist / star_radius)**(1.3)
-    # inner = (255, 155, 50)
+    # inner = np.array((255, 155, 50))
     # outer = (182, 11, 0)
     inner = np.array(temp2rgb(lc_info.teff))
-    outer = inner / 1.5
+    outer_hsv = colors.rgb_to_hsv(inner)
+    outer_hsv[1] = 1
+    outer = colors.hsv_to_rgb(outer_hsv)
     transit_img = r_mapped[:, :, None] * outer + (1 - r_mapped[:, :, None]) * inner
     transit_img[mask] = (0, 0, 0)
 
@@ -194,7 +197,7 @@ greenco = np.poly1d(greenco)
 blueco = np.poly1d(blueco)
 
 def temp2rgb(temp):
-    """Convert blackboxy color to RGB value
+    """Convert blackbody color to RGB value
 
     Args:
         temp (float): temperature in Kelvin
@@ -225,5 +228,4 @@ def temp2rgb(temp):
     color = (int(red),
              int(green),
              int(blue))
-    print(color)
     return color

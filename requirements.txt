@@ -1,0 +1,5 @@
+pandas
+numpy
+tweepy
+matplotlib
+lightkurve

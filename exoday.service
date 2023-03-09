@@ -1,0 +1,11 @@
+[Unit]
+Description=upload lightcurve to Twitter
+
+[Service]
+Type=oneshot
+ExecStart=/home/evan/resources/venv3/bin/python main.py twitter
+WorkingDirectory=/home/evan/resources/lightcurve-of-the-day/
+Restart=on-failure
+
+[Install]
+WantedBy=cron-daily.target
