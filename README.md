@@ -1,5 +1,7 @@
 # Exoplanet of the Day
 
+![](preview.png)
+
 ## Quickstart
  
     cp keys.py.template keys.py
