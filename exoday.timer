@@ -1,0 +1,8 @@
+[Unit]
+Description="Run Exoplanet of the Day periodically"
+
+[Timer]
+OnCalendar=daily
+
+[Install]
+WantedBy=timers.target
