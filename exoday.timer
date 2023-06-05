@@ -3,6 +3,7 @@ Description="Run Exoplanet of the Day periodically"
 
 [Timer]
 OnCalendar=daily
+Persistent=true
 
 [Install]
 WantedBy=timers.target
