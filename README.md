@@ -4,6 +4,7 @@
 
 ## Quickstart
  
+    sudo apt install ffmpeg
     cp keys.py.template keys.py
     # modify keys.py with keys from https://developer.twitter.com/en/portal/projects/
     pip install -r requirements.txt

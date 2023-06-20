@@ -3,7 +3,7 @@ Description=upload lightcurve to Twitter/Mastodon
 
 [Service]
 Type=oneshot
-ExecStartPre=/home/evan/resources/venv3/bin/python main.py both
+ExecStart=/home/evan/resources/venv3/bin/python main.py both
 WorkingDirectory=/home/evan/resources/lightcurve-of-the-day/
 Restart=on-failure
 

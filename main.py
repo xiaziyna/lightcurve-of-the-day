@@ -72,8 +72,8 @@ def mastodon(args):
     print(response['url'])
 
 def both(args):
-    mastodon(args)
     twitter(args)
+    mastodon(args)
 
 
 if __name__ == "__main__":
@@ -95,8 +95,8 @@ if __name__ == "__main__":
     mastodon_parser = subparsers.add_parser('mastodon', help="plot and post to Mastodon")
     mastodon_parser.set_defaults(func=mastodon)
     # subparser for `both` command
-    both = subparsers.add_parser('both', help="plot and post to Twitter/Mastodon")
-    both.set_defaults(func=mastodon)
+    both_parser = subparsers.add_parser('both', help="plot and post to Twitter/Mastodon")
+    both_parser.set_defaults(func=both)
 
     args = parser.parse_args()
 
