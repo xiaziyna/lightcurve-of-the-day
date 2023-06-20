@@ -32,11 +32,16 @@ def twitter(args):
     auth.set_access_token(access_token, access_token_secret)
     # calling the api
     api = tweepy.API(auth)
+    client = tweepy.Client(
+        consumer_key=api_key, consumer_secret=api_key_secret,
+        access_token=access_token, access_token_secret=access_token_secret
+    )
 
     # posting the tweet
     media = api.media_upload('animation.mp4', media_category='tweet_video')
-    tweetinfo = api.update_status(status=status, media_ids=[media.media_id])
-    print(tweetinfo._json['entities']['urls'][0]['expanded_url'])
+    tweetinfo = client.create_tweet(text=status, media_ids=[media.media_id])
+    # tweetinfo = api.update_status(status=status, media_ids=[media.media_id])
+    print(tweetinfo.data['text'])
 
 def mastodon(args):
     mywriter = animation.FFMpegWriter(fps=60)
@@ -66,6 +71,10 @@ def mastodon(args):
     ).json()
     print(response['url'])
 
+def both(args):
+    mastodon(args)
+    twitter(args)
+
 
 if __name__ == "__main__":
 
@@ -85,6 +94,9 @@ if __name__ == "__main__":
     # subparser for `mastodon` command
     mastodon_parser = subparsers.add_parser('mastodon', help="plot and post to Mastodon")
     mastodon_parser.set_defaults(func=mastodon)
+    # subparser for `both` command
+    both = subparsers.add_parser('both', help="plot and post to Twitter/Mastodon")
+    both.set_defaults(func=mastodon)
 
     args = parser.parse_args()
 
